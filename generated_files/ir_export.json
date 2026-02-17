@@ -1,0 +1,24 @@
+[
+    {
+        "function": "main",
+        "metrics": {
+            "block_count": 1,
+            "edge_count": 0
+        },
+        "analysis": {
+            "flow_type": "Simple (Linear)",
+            "loop_status": "No Loops"
+        }
+    },
+    {
+        "function": "foo",
+        "metrics": {
+            "block_count": 1,
+            "edge_count": 0
+        },
+        "analysis": {
+            "flow_type": "Simple (Linear)",
+            "loop_status": "No Loops"
+        }
+    }
+]
