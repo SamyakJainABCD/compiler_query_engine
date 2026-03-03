@@ -8,26 +8,66 @@
     },
     "children": [
         {
-            "name": "main",
+            "name": "j",
             "kind": "FUNCTION_DECL",
-            "type": "int ()",
+            "type": "int (int, int, int, int)",
             "location": {
                 "line": 1,
                 "column": 5
             },
             "children": [
                 {
+                    "name": "r",
+                    "kind": "PARM_DECL",
+                    "type": "int",
+                    "location": {
+                        "line": 1,
+                        "column": 11
+                    },
+                    "children": []
+                },
+                {
+                    "name": "s",
+                    "kind": "PARM_DECL",
+                    "type": "int",
+                    "location": {
+                        "line": 1,
+                        "column": 18
+                    },
+                    "children": []
+                },
+                {
+                    "name": "t",
+                    "kind": "PARM_DECL",
+                    "type": "int",
+                    "location": {
+                        "line": 1,
+                        "column": 25
+                    },
+                    "children": []
+                },
+                {
+                    "name": "u",
+                    "kind": "PARM_DECL",
+                    "type": "int",
+                    "location": {
+                        "line": 1,
+                        "column": 32
+                    },
+                    "children": []
+                },
+                {
                     "name": "",
                     "kind": "COMPOUND_STMT",
                     "type": "",
                     "location": {
                         "line": 1,
-                        "column": 12
+                        "column": 35
                     },
                     "children": [
                         {
                             "name": "",
-                            "kind": "DECL_STMT",
+                            "kind": "FOR_STMT",
                             "type": "",
                             "location": {
                                 "line": 2,
@@ -35,11 +75,181 @@
                             },
                             "children": [
                                 {
-                                    "name": "i",
-                                    "kind": "VAR_DECL",
+                                    "name": "",
+                                    "kind": "DECL_STMT",
+                                    "type": "",
+                                    "location": {
+                                        "line": 2,
+                                        "column": 9
+                                    },
+                                    "children": [
+                                        {
+                                            "name": "i",
+                                            "kind": "VAR_DECL",
+                                            "type": "int",
+                                            "location": {
+                                                "line": 2,
+                                                "column": 13
+                                            },
+                                            "children": [
+                                                {
+                                                    "name": "",
+                                                    "kind": "INTEGER_LITERAL",
+                                                    "type": "int",
+                                                    "location": {
+                                                        "line": 2,
+                                                        "column": 17
+                                                    },
+                                                    "children": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "",
+                                    "kind": "BINARY_OPERATOR",
                                     "type": "int",
                                     "location": {
                                         "line": 2,
+                                        "column": 20
+                                    },
+                                    "children": [
+                                        {
+                                            "name": "i",
+                                            "kind": "UNEXPOSED_EXPR",
+                                            "type": "int",
+                                            "location": {
+                                                "line": 2,
+                                                "column": 20
+                                            },
+                                            "children": [
+                                                {
+                                                    "name": "i",
+                                                    "kind": "DECL_REF_EXPR",
+                                                    "type": "int",
+                                                    "location": {
+                                                        "line": 2,
+                                                        "column": 20
+                                                    },
+                                                    "children": []
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "r",
+                                            "kind": "UNEXPOSED_EXPR",
+                                            "type": "int",
+                                            "location": {
+                                                "line": 2,
+                                                "column": 24
+                                            },
+                                            "children": [
+                                                {
+                                                    "name": "r",
+                                                    "kind": "DECL_REF_EXPR",
+                                                    "type": "int",
+                                                    "location": {
+                                                        "line": 2,
+                                                        "column": 24
+                                                    },
+                                                    "children": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "",
+                                    "kind": "UNARY_OPERATOR",
+                                    "type": "int",
+                                    "location": {
+                                        "line": 2,
+                                        "column": 27
+                                    },
+                                    "children": [
+                                        {
+                                            "name": "i",
+                                            "kind": "DECL_REF_EXPR",
+                                            "type": "int",
+                                            "location": {
+                                                "line": 2,
+                                                "column": 27
+                                            },
+                                            "children": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "",
+                                    "kind": "COMPOUND_STMT",
+                                    "type": "",
+                                    "location": {
+                                        "line": 2,
+                                        "column": 32
+                                    },
+                                    "children": [
+                                        {
+                                            "name": "",
+                                            "kind": "COMPOUND_ASSIGNMENT_OPERATOR",
+                                            "type": "int",
+                                            "location": {
+                                                "line": 3,
+                                                "column": 9
+                                            },
+                                            "children": [
+                                                {
+                                                    "name": "i",
+                                                    "kind": "DECL_REF_EXPR",
+                                                    "type": "int",
+                                                    "location": {
+                                                        "line": 3,
+                                                        "column": 9
+                                                    },
+                                                    "children": []
+                                                },
+                                                {
+                                                    "name": "i",
+                                                    "kind": "UNEXPOSED_EXPR",
+                                                    "type": "int",
+                                                    "location": {
+                                                        "line": 3,
+                                                        "column": 14
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "name": "i",
+                                                            "kind": "DECL_REF_EXPR",
+                                                            "type": "int",
+                                                            "location": {
+                                                                "line": 3,
+                                                                "column": 14
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "",
+                            "kind": "DECL_STMT",
+                            "type": "",
+                            "location": {
+                                "line": 5,
+                                "column": 5
+                            },
+                            "children": [
+                                {
+                                    "name": "x",
+                                    "kind": "VAR_DECL",
+                                    "type": "int",
+                                    "location": {
+                                        "line": 5,
                                         "column": 9
                                     },
                                     "children": [
@@ -48,7 +258,7 @@
                                             "kind": "INTEGER_LITERAL",
                                             "type": "int",
                                             "location": {
-                                                "line": 2,
+                                                "line": 5,
                                                 "column": 13
                                             },
                                             "children": []
@@ -62,16 +272,16 @@
                             "kind": "DECL_STMT",
                             "type": "",
                             "location": {
-                                "line": 3,
+                                "line": 6,
                                 "column": 5
                             },
                             "children": [
                                 {
-                                    "name": "j",
+                                    "name": "p",
                                     "kind": "VAR_DECL",
                                     "type": "int",
                                     "location": {
-                                        "line": 3,
+                                        "line": 6,
                                         "column": 9
                                     },
                                     "children": []
@@ -83,177 +293,28 @@
                             "kind": "RETURN_STMT",
                             "type": "",
                             "location": {
-                                "line": 4,
+                                "line": 7,
                                 "column": 5
                             },
                             "children": [
                                 {
-                                    "name": "",
-                                    "kind": "INTEGER_LITERAL",
+                                    "name": "p",
+                                    "kind": "UNEXPOSED_EXPR",
                                     "type": "int",
                                     "location": {
-                                        "line": 4,
+                                        "line": 7,
                                         "column": 12
                                     },
-                                    "children": []
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "foo",
-            "kind": "FUNCTION_DECL",
-            "type": "void ()",
-            "location": {
-                "line": 8,
-                "column": 6
-            },
-            "children": [
-                {
-                    "name": "",
-                    "kind": "COMPOUND_STMT",
-                    "type": "",
-                    "location": {
-                        "line": 8,
-                        "column": 12
-                    },
-                    "children": [
-                        {
-                            "name": "",
-                            "kind": "DECL_STMT",
-                            "type": "",
-                            "location": {
-                                "line": 9,
-                                "column": 5
-                            },
-                            "children": [
-                                {
-                                    "name": "x",
-                                    "kind": "VAR_DECL",
-                                    "type": "int",
-                                    "location": {
-                                        "line": 9,
-                                        "column": 9
-                                    },
                                     "children": [
                                         {
-                                            "name": "",
-                                            "kind": "INTEGER_LITERAL",
+                                            "name": "p",
+                                            "kind": "DECL_REF_EXPR",
                                             "type": "int",
                                             "location": {
-                                                "line": 9,
-                                                "column": 13
+                                                "line": 7,
+                                                "column": 12
                                             },
                                             "children": []
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "name": "",
-                            "kind": "DECL_STMT",
-                            "type": "",
-                            "location": {
-                                "line": 10,
-                                "column": 5
-                            },
-                            "children": [
-                                {
-                                    "name": "j",
-                                    "kind": "VAR_DECL",
-                                    "type": "int",
-                                    "location": {
-                                        "line": 10,
-                                        "column": 9
-                                    },
-                                    "children": [
-                                        {
-                                            "name": "",
-                                            "kind": "INTEGER_LITERAL",
-                                            "type": "int",
-                                            "location": {
-                                                "line": 10,
-                                                "column": 13
-                                            },
-                                            "children": []
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "name": "",
-                            "kind": "BINARY_OPERATOR",
-                            "type": "int",
-                            "location": {
-                                "line": 11,
-                                "column": 5
-                            },
-                            "children": [
-                                {
-                                    "name": "j",
-                                    "kind": "DECL_REF_EXPR",
-                                    "type": "int",
-                                    "location": {
-                                        "line": 11,
-                                        "column": 5
-                                    },
-                                    "children": []
-                                },
-                                {
-                                    "name": "",
-                                    "kind": "BINARY_OPERATOR",
-                                    "type": "int",
-                                    "location": {
-                                        "line": 11,
-                                        "column": 9
-                                    },
-                                    "children": [
-                                        {
-                                            "name": "x",
-                                            "kind": "UNEXPOSED_EXPR",
-                                            "type": "int",
-                                            "location": {
-                                                "line": 11,
-                                                "column": 9
-                                            },
-                                            "children": [
-                                                {
-                                                    "name": "x",
-                                                    "kind": "DECL_REF_EXPR",
-                                                    "type": "int",
-                                                    "location": {
-                                                        "line": 11,
-                                                        "column": 9
-                                                    },
-                                                    "children": []
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "name": "j",
-                                            "kind": "UNEXPOSED_EXPR",
-                                            "type": "int",
-                                            "location": {
-                                                "line": 11,
-                                                "column": 13
-                                            },
-                                            "children": [
-                                                {
-                                                    "name": "j",
-                                                    "kind": "DECL_REF_EXPR",
-                                                    "type": "int",
-                                                    "location": {
-                                                        "line": 11,
-                                                        "column": 13
-                                                    },
-                                                    "children": []
-                                                }
-                                            ]
                                         }
                                     ]
                                 }

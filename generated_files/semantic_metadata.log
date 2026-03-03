@@ -1,0 +1,13 @@
+[
+    {
+        "function": "j",
+        "metrics": {
+            "block_count": 5,
+            "edge_count": 5
+        },
+        "analysis": {
+            "flow_type": "Complex (Branching)",
+            "loop_status": "Possible Loop Detected"
+        }
+    }
+]

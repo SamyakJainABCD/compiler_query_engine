@@ -1,20 +1,48 @@
 {
-    "main": {
+    "j": {
         "nodes": [
             {
                 "id": "",
-                "instruction_count": 6
-            }
-        ],
-        "edges": []
-    },
-    "foo": {
-        "nodes": [
+                "instruction_count": 13
+            },
             {
                 "id": "",
-                "instruction_count": 9
+                "instruction_count": 4
+            },
+            {
+                "id": "",
+                "instruction_count": 5
+            },
+            {
+                "id": "",
+                "instruction_count": 4
+            },
+            {
+                "id": "",
+                "instruction_count": 3
             }
         ],
-        "edges": []
+        "edges": [
+            {
+                "from": "",
+                "to": "12"
+            },
+            {
+                "from": "",
+                "to": "16"
+            },
+            {
+                "from": "",
+                "to": "23"
+            },
+            {
+                "from": "",
+                "to": "20"
+            },
+            {
+                "from": "",
+                "to": "12"
+            }
+        ]
     }
 }

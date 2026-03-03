@@ -11,6 +11,7 @@ def generate_llvm_ir(source_file, output_file=None):
         "clang", 
         "-S", 
         "-emit-llvm", 
+        "-g",
         source_file, 
         "-o", 
         output_file

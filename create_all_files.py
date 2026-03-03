@@ -21,10 +21,10 @@ create_ir.generate_llvm_ir(c_path, ir_path)
 ir_output_path = os.path.join(output_dir, "ir_export.json")
 ir_parser.export_ir_to_json(ir_path, ir_output_path)
 
-cfg_ouput_path = os.path.join(output_dir, "cfg_export")
+cfg_ouput_path = os.path.join(output_dir, "cfg_export.json")
 extractor = cfg_extractor.CFGExtractor(ir_path, output_path=cfg_ouput_path)
 
 cfg_results = extractor.extract_cfg()
 
-sem_log_output_path = os.path.join(output_dir, "ir_export.json")
+sem_log_output_path = os.path.join(output_dir, "semantic_metadata.log")
 semantic_logger.generate_semantic_logs(cfg_results, sem_log_output_path)

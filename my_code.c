@@ -1,12 +1,8 @@
-int main() { 
-    int i = 3;
-    int j;
-    return 0; 
-
-}
-
-void foo() {
+int j(int r, int s, int t, int u) {
+    for(int i = 0; i < r; i++) {
+        i += i;
+    }
     int x = 10;
-    int j = 1;
-    j = x + j;
+    int p;
+    return p;
 }
