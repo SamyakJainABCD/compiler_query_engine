@@ -179,3 +179,8 @@ def test():
             print(json.dumps(result, indent=2))
         else:
             print(result)
+
+'''
+is there a loop in foo?
+Find all unused variables
+'''

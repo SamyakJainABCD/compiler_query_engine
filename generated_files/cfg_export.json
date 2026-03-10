@@ -1,9 +1,9 @@
 {
-    "j": {
+    "foo": {
         "nodes": [
             {
                 "id": "",
-                "instruction_count": 13
+                "instruction_count": 14
             },
             {
                 "id": "",
@@ -19,30 +19,39 @@
             },
             {
                 "id": "",
-                "instruction_count": 3
+                "instruction_count": 4
             }
         ],
         "edges": [
             {
                 "from": "",
-                "to": "12"
+                "to": "13"
             },
             {
                 "from": "",
-                "to": "16"
+                "to": "17"
             },
             {
                 "from": "",
-                "to": "23"
+                "to": "24"
             },
             {
                 "from": "",
-                "to": "20"
+                "to": "21"
             },
             {
                 "from": "",
-                "to": "12"
+                "to": "13"
             }
         ]
+    },
+    "bar": {
+        "nodes": [
+            {
+                "id": "",
+                "instruction_count": 1
+            }
+        ],
+        "edges": []
     }
 }
