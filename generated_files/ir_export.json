@@ -1,64 +1,81 @@
 {
     "functions": [
         {
-            "name": "foo",
+            "name": "error_handler",
             "blocks": [
                 {
                     "id": "",
                     "instructions": [
+                        "%1 = call i32 (ptr, ...) @printf(ptr noundef @.str), !dbg !30",
+                        "call void @exit(i32 noundef 1) #5, !dbg !31",
+                        "unreachable, !dbg !31"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "printf",
+            "blocks": []
+        },
+        {
+            "name": "exit",
+            "blocks": []
+        },
+        {
+            "name": "process_value",
+            "blocks": [
+                {
+                    "id": "",
+                    "instructions": [
+                        "%3 = alloca i32, align 4",
+                        "%4 = alloca i32, align 4",
                         "%5 = alloca i32, align 4",
                         "%6 = alloca i32, align 4",
-                        "%7 = alloca i32, align 4",
-                        "%8 = alloca i32, align 4",
-                        "%9 = alloca i32, align 4",
-                        "%10 = alloca i32, align 4",
-                        "%11 = alloca i32, align 4",
-                        "%12 = alloca i32, align 4",
-                        "store i32 %0, ptr %5, align 4",
-                        "store i32 %1, ptr %6, align 4",
-                        "store i32 %2, ptr %7, align 4",
-                        "store i32 %3, ptr %8, align 4",
-                        "store i32 0, ptr %9, align 4, !dbg !25",
-                        "br label %13, !dbg !26"
+                        "store i32 %0, ptr %4, align 4",
+                        "store i32 %1, ptr %5, align 4",
+                        "store i32 0, ptr %6, align 4, !dbg !37",
+                        "%7 = load i32, ptr %4, align 4, !dbg !38",
+                        "%8 = icmp slt i32 %7, 0, !dbg !40",
+                        "br i1 %8, label %9, label %11, !dbg !41"
                     ]
                 },
                 {
                     "id": "",
                     "instructions": [
-                        "%14 = load i32, ptr %9, align 4, !dbg !27",
-                        "%15 = load i32, ptr %5, align 4, !dbg !29",
-                        "%16 = icmp slt i32 %14, %15, !dbg !30",
-                        "br i1 %16, label %17, label %24, !dbg !31"
+                        "%10 = call i32 (ptr, ...) @printf(ptr noundef @.str.1), !dbg !42",
+                        "store i32 -1, ptr %3, align 4, !dbg !44",
+                        "br label %18, !dbg !44"
                     ]
                 },
                 {
                     "id": "",
                     "instructions": [
-                        "%18 = load i32, ptr %9, align 4, !dbg !32",
-                        "%19 = load i32, ptr %9, align 4, !dbg !34",
-                        "%20 = add nsw i32 %19, %18, !dbg !34",
-                        "store i32 %20, ptr %9, align 4, !dbg !34",
-                        "br label %21, !dbg !35"
+                        "%12 = load i32, ptr %4, align 4, !dbg !45",
+                        "%13 = icmp sgt i32 %12, 100, !dbg !47",
+                        "br i1 %13, label %14, label %15, !dbg !48"
                     ]
                 },
                 {
                     "id": "",
                     "instructions": [
-                        "%22 = load i32, ptr %9, align 4, !dbg !36",
-                        "%23 = add nsw i32 %22, 1, !dbg !36",
-                        "store i32 %23, ptr %9, align 4, !dbg !36",
-                        "br label %13, !dbg !37, !llvm.loop !38"
+                        "call void @error_handler(), !dbg !49",
+                        "br label %15, !dbg !51"
                     ]
                 },
                 {
                     "id": "",
                     "instructions": [
-                        "store i32 10, ptr %10, align 4, !dbg !42",
-                        "store i32 1, ptr %12, align 4, !dbg !47",
-                        "%25 = load i32, ptr %12, align 4, !dbg !48",
-                        "store i32 %25, ptr %5, align 4, !dbg !49",
-                        "%26 = load i32, ptr %11, align 4, !dbg !50",
-                        "ret i32 %26, !dbg !51"
+                        "%16 = load i32, ptr %4, align 4, !dbg !52",
+                        "%17 = mul nsw i32 %16, 2, !dbg !53",
+                        "store i32 %17, ptr %3, align 4, !dbg !54",
+                        "br label %18, !dbg !54"
+                    ]
+                },
+                {
+                    "id": "",
+                    "instructions": [
+                        "%19 = load i32, ptr %3, align 4, !dbg !55",
+                        "ret i32 %19, !dbg !55"
                     ]
                 }
             ]
@@ -68,19 +85,52 @@
             "blocks": []
         },
         {
-            "name": "bar",
+            "name": "main",
             "blocks": [
                 {
                     "id": "",
                     "instructions": [
                         "%3 = alloca i32, align 4",
                         "%4 = alloca i32, align 4",
-                        "store i32 %0, ptr %3, align 4",
-                        "store i32 %1, ptr %4, align 4",
-                        "ret void, !dbg !19"
+                        "%5 = alloca ptr, align 8",
+                        "%6 = alloca i32, align 4",
+                        "%7 = alloca i32, align 4",
+                        "store i32 0, ptr %3, align 4",
+                        "store i32 %0, ptr %4, align 4",
+                        "store ptr %1, ptr %5, align 8",
+                        "store i32 50, ptr %7, align 4, !dbg !41",
+                        "%8 = load i32, ptr %4, align 4, !dbg !42",
+                        "%9 = icmp sgt i32 %8, 1, !dbg !44",
+                        "br i1 %9, label %10, label %15, !dbg !45"
+                    ]
+                },
+                {
+                    "id": "",
+                    "instructions": [
+                        "%11 = load ptr, ptr %5, align 8, !dbg !46",
+                        "%12 = getelementptr inbounds ptr, ptr %11, i64 1, !dbg !46",
+                        "%13 = load ptr, ptr %12, align 8, !dbg !46",
+                        "%14 = call i32 @atoi(ptr noundef %13) #5, !dbg !48",
+                        "store i32 %14, ptr %7, align 4, !dbg !49",
+                        "br label %15, !dbg !50"
+                    ]
+                },
+                {
+                    "id": "",
+                    "instructions": [
+                        "%16 = load i32, ptr %7, align 4, !dbg !51",
+                        "%17 = call i32 @process_value(i32 noundef %16, i32 noundef 0), !dbg !52",
+                        "store i32 %17, ptr %6, align 4, !dbg !53",
+                        "%18 = load i32, ptr %6, align 4, !dbg !54",
+                        "%19 = call i32 (ptr, ...) @printf(ptr noundef @.str.2, i32 noundef %18), !dbg !55",
+                        "ret i32 0, !dbg !56"
                     ]
                 }
             ]
+        },
+        {
+            "name": "atoi",
+            "blocks": []
         }
     ]
 }

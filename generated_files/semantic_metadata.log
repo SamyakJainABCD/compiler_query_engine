@@ -1,17 +1,6 @@
 [
     {
-        "function": "foo",
-        "metrics": {
-            "block_count": 5,
-            "edge_count": 5
-        },
-        "analysis": {
-            "flow_type": "Complex (Branching)",
-            "loop_status": "Possible Loop Detected"
-        }
-    },
-    {
-        "function": "bar",
+        "function": "error_handler",
         "metrics": {
             "block_count": 1,
             "edge_count": 0
@@ -19,6 +8,28 @@
         "analysis": {
             "flow_type": "Simple (Linear)",
             "loop_status": "No Loops"
+        }
+    },
+    {
+        "function": "process_value",
+        "metrics": {
+            "block_count": 6,
+            "edge_count": 7
+        },
+        "analysis": {
+            "flow_type": "Complex (Branching)",
+            "loop_status": "Possible Loop Detected"
+        }
+    },
+    {
+        "function": "main",
+        "metrics": {
+            "block_count": 3,
+            "edge_count": 3
+        },
+        "analysis": {
+            "flow_type": "Complex (Branching)",
+            "loop_status": "Possible Loop Detected"
         }
     }
 ]

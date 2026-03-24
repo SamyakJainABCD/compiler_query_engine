@@ -1,57 +1,121 @@
 {
-    "foo": {
+    "error_handler": {
         "nodes": [
             {
-                "id": "",
-                "instruction_count": 14
+                "id": "0",
+                "instruction_count": 3
+            }
+        ],
+        "edges": [],
+        "calls": [
+            "exit"
+        ]
+    },
+    "process_value": {
+        "nodes": [
+            {
+                "id": "0",
+                "instruction_count": 10
             },
             {
-                "id": "",
+                "id": "1",
+                "instruction_count": 3
+            },
+            {
+                "id": "2",
+                "instruction_count": 3
+            },
+            {
+                "id": "3",
+                "instruction_count": 2
+            },
+            {
+                "id": "4",
                 "instruction_count": 4
             },
             {
-                "id": "",
-                "instruction_count": 5
+                "id": "5",
+                "instruction_count": 2
+            }
+        ],
+        "edges": [
+            {
+                "from": "0",
+                "to": "9"
             },
             {
-                "id": "",
-                "instruction_count": 4
+                "from": "0",
+                "to": "11"
             },
             {
-                "id": "",
+                "from": "1",
+                "to": "18"
+            },
+            {
+                "from": "2",
+                "to": "14"
+            },
+            {
+                "from": "2",
+                "to": "15"
+            },
+            {
+                "from": "3",
+                "to": "15"
+            },
+            {
+                "from": "4",
+                "to": "18"
+            }
+        ],
+        "calls": [
+            "error_handler"
+        ]
+    },
+    "main": {
+        "nodes": [
+            {
+                "id": "0",
+                "instruction_count": 12
+            },
+            {
+                "id": "1",
+                "instruction_count": 6
+            },
+            {
+                "id": "2",
                 "instruction_count": 6
             }
         ],
         "edges": [
             {
-                "from": "",
-                "to": "13"
+                "from": "0",
+                "to": "10"
             },
             {
-                "from": "",
-                "to": "17"
+                "from": "0",
+                "to": "15"
             },
             {
-                "from": "",
-                "to": "24"
-            },
-            {
-                "from": "",
-                "to": "21"
-            },
-            {
-                "from": "",
-                "to": "13"
-            }
-        ]
-    },
-    "bar": {
-        "nodes": [
-            {
-                "id": "",
-                "instruction_count": 5
+                "from": "1",
+                "to": "15"
             }
         ],
-        "edges": []
+        "calls": [
+            "atoi",
+            "process_value"
+        ]
+    },
+    "_call_graph": {
+        "error_handler": [
+            "exit"
+        ],
+        "process_value": [
+            "error_handler"
+        ],
+        "main": [
+            "atoi",
+            "process_value"
+        ]
     }
 }

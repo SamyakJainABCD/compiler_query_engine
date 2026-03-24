@@ -2,9 +2,9 @@ import json
 from modules.nlp_parser import NLPEngine
 
 class QueryEngine:
-    def __init__(self, ast_file='ast_export.json',
-                 ir_file='ir_export.json',
-                 cfg_file='cfg_export.json',
+    def __init__(self, ast_file='generated_files/ast_export.json',
+                 ir_file='generated_files/ir_export.json',
+                 cfg_file='generated_files/cfg_export.json',
                  sem_log='generated_files/semantic_metadata.log'
     ):
         with open(ast_file, 'r') as f: self.ast_data = json.load(f)
@@ -17,18 +17,26 @@ class QueryEngine:
             self.sem_data = []
 
     def execute(self, intent):
+        query_type = intent.get('query_type', 'standard')
         layer = intent.get('layer')
         target = intent.get('target')
         scope = intent.get('scope')
+        name = intent.get('name')
         attributes = intent.get('attributes', [])
         action = intent.get('action')
+
+        # Handle reachability queries
+        if query_type == 'reachability':
+            target_block = name  # e.g., "error_handler"
+            source_func = scope  # e.g., "main"
+            return self._check_reachability(target_block, source_func)
 
         print(f"\n🔍 Searching {layer} for {target}...")
 
         if "unused" in attributes:
             return self.resolve_semantic_query(intent)
         if layer == 'AST':
-            results = self._search_ast(self.ast_data, target, scope, attributes)
+            results = self._search_ast(self.ast_data, target, scope, name, attributes)
             
             # If the user asked to "count", return the length instead of the list
             # if action == "count":
@@ -50,25 +58,83 @@ class QueryEngine:
                 return self.cfg_data[scope]
             return f"No Control Flow Graph found for function: {scope}"
 
-    def _search_ast(self, node, target, scope, attributes=None, results=None, current_scope="Global"):
+    def _check_reachability(self, target_block, source_func):
+        """
+        Check if a target block/function is reachable from a source function.
+        Uses inter-procedural analysis through the call graph.
+        Args:
+            target_block: The block/function name we're checking reachability for (e.g., "error_handler")
+            source_func: The function name to start from (e.g., "main")
+        Returns:
+            A message indicating reachability and the path if reachable
+        """
+        # Extract call graph from CFG
+        call_graph = self.cfg_data.get("_call_graph", {})
+        
+        if not source_func:
+            return f"❌ Please specify a source function (e.g., 'from main')"
+        
+        if source_func not in self.cfg_data:
+            return f"❌ Function '{source_func}' not found in the CFG."
+        
+        # Check if target is a function in the call graph
+        is_function = target_block in call_graph or target_block in self.cfg_data
+        
+        if not is_function and target_block not in self.cfg_data:
+            return f"❌ Target '{target_block}' not found in the CFG."
+        
+        # Perform BFS to find if target_block is reachable from source_func
+        from collections import deque
+        
+        queue = deque([(source_func, [source_func])])
+        visited = {source_func}
+        
+        while queue:
+            current_func, path = queue.popleft()
+            
+            # Check if we reached the target
+            if current_func == target_block:
+                path_str = " → ".join(path)
+                return f"✅ YES, '{target_block}' is reachable from '{source_func}'\n   Call Chain: {path_str}"
+            
+            # Get the functions called by current_func
+            if current_func in call_graph:
+                for called_func in call_graph[current_func]:
+                    # Only check functions that are in our CFG (skip external functions)
+                    if called_func in call_graph or called_func in self.cfg_data:
+                        if called_func not in visited:
+                            visited.add(called_func)
+                            queue.append((called_func, path + [called_func]))
+        
+        return f"❌ NO, '{target_block}' is NOT reachable from '{source_func}'"
+
+    def _search_ast(self, node, target, scope, name=None, attributes=None, results=None, current_scope="Global"):
         if results is None: results = []
         if attributes is None: attributes = []
         
-        kind_map = {"function": "FUNCTION_DECL", "variable": "VAR_DECL"}
+        kind_map = {"function": "FUNCTION_DECL", "variable": ["VAR_DECL", "PARM_DECL"]}
         search_kind = kind_map.get(target)
 
         # Update the 'current_scope' if we are entering a function
         if node.get('kind') == "FUNCTION_DECL":
-            new_scope = node.get('name', 'Unknown')
+            current_scope = node.get('name', 'Unknown')
+
+        # If we find the target (variable or function)
+        # Handle both single kind (function) and multiple kinds (variable = VAR_DECL + PARM_DECL)
+        is_target_kind = False
+        if isinstance(search_kind, list):
+            is_target_kind = node.get('kind') in search_kind
         else:
-            new_scope = current_scope
-
-        # If we find the target (variable)
-        if node.get('kind') == search_kind:
+            is_target_kind = node.get('kind') == search_kind
+        
+        if is_target_kind:
             type_match = any(attr in node.get('type', '').lower() for attr in attributes)
-            name_match = (scope is None or scope.lower() == "all" or scope.lower() in node.get('name', '').lower())
+            # Check if we're in the right scope (function)
+            scope_match = (scope is None or scope.lower() == "all" or current_scope.lower() == scope.lower())
+            # Check if the name matches (if specified)
+            name_match = (name is None or node.get('name', '').lower() == name.lower())
 
-            if (type_match or not attributes) and name_match:
+            if (type_match or not attributes) and scope_match and name_match:
                 # ADDED: Include the current_scope in the result
                 results.append({
                     "name": node['name'], 
@@ -76,9 +142,9 @@ class QueryEngine:
                     "found_in": current_scope  # This tells you which function it's in
                 })
 
-        # Recursive call: Pass the 'new_scope' down to children
+        # Recursive call: Pass the updated scope down to children
         for child in node.get('children', []):
-            self._search_ast(child, target, scope, attributes, results, new_scope)
+            self._search_ast(child, target, scope, name, attributes, results, current_scope)
         
         return results
     
@@ -108,6 +174,10 @@ class QueryEngine:
         for func in self.ir_data.get('functions', []):
             func_name = func['name']
             
+            # Get function node from AST to identify parameters
+            func_node = self._find_function_in_ast(func_name)
+            params = self._extract_params_in_function(func_node) if func_node else []
+            
             # Build a map: IR address (%5, %6, etc.) -> original variable name
             addr_to_varname = self._build_var_mapping(func_name)
             
@@ -119,8 +189,11 @@ class QueryEngine:
                 # Variable is unused if it has stores but NO loads
                 if usage_info['stores'] > 0 and usage_info['loads'] == 0:
                     # Map back to original variable name
-                    var_name = addr_to_varname.get(ir_addr, ir_addr)
-                    unused.append(var_name)
+                    var_name = addr_to_varname.get(ir_addr)
+                    # Only add if we successfully mapped it (not an unmapped IR address)
+                    # And exclude parameters (they're intentional, even if unused)
+                    if var_name and not var_name.startswith('%') and var_name not in params:
+                        unused.append(var_name)
             
             if unused:
                 unused_by_function[func_name] = unused
@@ -317,4 +390,9 @@ def test():
 '''
 is there a loop in foo?
 Find all unused variables
+find function process_value
+Find variable val in process_value
+Find variable x
+Is the error_handler block reachable from main?
 '''
+ 

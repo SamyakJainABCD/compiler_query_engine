@@ -4,6 +4,13 @@ def generate_semantic_logs(cfg_data, output_path):
     logs = []
     
     for func, data in cfg_data.items():
+        # Skip non-function entries like _call_graph
+        if func.startswith("_"):
+            continue
+        
+        if not isinstance(data, dict) or "nodes" not in data:
+            continue
+        
         num_blocks = len(data["nodes"])
         num_edges = len(data["edges"])
         
