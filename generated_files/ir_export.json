@@ -131,6 +131,17 @@
         {
             "name": "atoi",
             "blocks": []
+        },
+        {
+            "name": "new",
+            "blocks": [
+                {
+                    "id": "",
+                    "instructions": [
+                        "ret void, !dbg !30"
+                    ]
+                }
+            ]
         }
     ]
 }

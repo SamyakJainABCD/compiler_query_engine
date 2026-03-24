@@ -106,6 +106,16 @@
             "process_value"
         ]
     },
+    "new": {
+        "nodes": [
+            {
+                "id": "0",
+                "instruction_count": 1
+            }
+        ],
+        "edges": [],
+        "calls": []
+    },
     "_call_graph": {
         "error_handler": [
             "exit"
@@ -116,6 +126,7 @@
         "main": [
             "atoi",
             "process_value"
-        ]
+        ],
+        "new": []
     }
 }

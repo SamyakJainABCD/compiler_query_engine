@@ -17,6 +17,10 @@ class QueryEngine:
             self.sem_data = []
 
     def execute(self, intent):
+        # Check for parsing errors
+        if "error" in intent:
+            return intent["error"]
+        
         query_type = intent.get('query_type', 'standard')
         layer = intent.get('layer')
         target = intent.get('target')
@@ -27,6 +31,8 @@ class QueryEngine:
 
         # Handle reachability queries
         if query_type == 'reachability':
+            if not name or not scope:
+                return "❌ Reachability queries require quoted identifiers: is \"target\" reachable from \"source\""
             target_block = name  # e.g., "error_handler"
             source_func = scope  # e.g., "main"
             return self._check_reachability(target_block, source_func)
@@ -36,7 +42,15 @@ class QueryEngine:
         if "unused" in attributes:
             return self.resolve_semantic_query(intent)
         if layer == 'AST':
-            results = self._search_ast(self.ast_data, target, scope, name, attributes)
+            # If searching for a specific variable/function and one was given
+            if name:
+                results = self._search_ast(self.ast_data, target, scope, name, attributes)
+            # If no name provided but target requires it (function/variable)
+            elif target in ['variable', 'function']:
+                return f"❌ Please provide a quoted {target} name. Example: find {target} \"name\""
+            # Generic search without specific name
+            else:
+                results = self._search_ast(self.ast_data, target, scope, name, attributes)
             
             # If the user asked to "count", return the length instead of the list
             # if action == "count":
@@ -55,7 +69,7 @@ class QueryEngine:
         # --- CFG LAYER QUERIES ---
         elif layer == 'CFG':
             if scope in self.cfg_data:
-                return self.cfg_data[scope]
+                return self._format_cfg_output(self.cfg_data[scope], scope)
             return f"No Control Flow Graph found for function: {scope}"
 
     def _check_reachability(self, target_block, source_func):
@@ -115,10 +129,6 @@ class QueryEngine:
         kind_map = {"function": "FUNCTION_DECL", "variable": ["VAR_DECL", "PARM_DECL"]}
         search_kind = kind_map.get(target)
 
-        # Update the 'current_scope' if we are entering a function
-        if node.get('kind') == "FUNCTION_DECL":
-            current_scope = node.get('name', 'Unknown')
-
         # If we find the target (variable or function)
         # Handle both single kind (function) and multiple kinds (variable = VAR_DECL + PARM_DECL)
         is_target_kind = False
@@ -142,9 +152,14 @@ class QueryEngine:
                     "found_in": current_scope  # This tells you which function it's in
                 })
 
+        # Update the 'current_scope' if we are entering a function (for children traversal)
+        next_scope = current_scope
+        if node.get('kind') == "FUNCTION_DECL":
+            next_scope = node.get('name', 'Unknown')
+
         # Recursive call: Pass the updated scope down to children
         for child in node.get('children', []):
-            self._search_ast(child, target, scope, name, attributes, results, current_scope)
+            self._search_ast(child, target, scope, name, attributes, results, next_scope)
         
         return results
     
@@ -330,6 +345,11 @@ def interactive_session():
     nlp = NLPEngine()
 
     print("\n💬 Compiler Query Interface Active. (Type 'exit' to quit)")
+    print("📝 Note: Function and variable names must be provided in quotes.")
+    print("   Examples:")
+    print('   - find function "main"')
+    print('   - find variable "x" in "main"')
+    print('   - is "error_handler" reachable from "main"?')
     
     while True:
         user_input = input("\n👉 Ask about your code: ")
@@ -339,7 +359,7 @@ def interactive_session():
         intent = nlp.parse_query(user_input)
         
         # Step 2: Execute Query
-        if intent["target"]:
+        if intent.get("target"):
             result = qe.execute(intent)
             print(f"🤖 Result: {result}")
         else:
@@ -388,11 +408,11 @@ def test():
             print(result)
 
 '''
-is there a loop in foo?
 Find all unused variables
-find function process_value
-Find variable val in process_value
-Find variable x
-Is the error_handler block reachable from main?
+find function 'process_value'
+Find variable 'val' in 'process_value'
+Find variable 'x'
+Is the 'error_handler' block reachable from 'main'? (CFG)
+Show instructions for 'add'
 '''
  

@@ -20563,6 +20563,27 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "new",
+            "kind": "FUNCTION_DECL",
+            "type": "void ()",
+            "location": {
+                "line": 37,
+                "column": 6
+            },
+            "children": [
+                {
+                    "name": "",
+                    "kind": "COMPOUND_STMT",
+                    "type": "",
+                    "location": {
+                        "line": 37,
+                        "column": 11
+                    },
+                    "children": []
+                }
+            ]
         }
     ]
 }

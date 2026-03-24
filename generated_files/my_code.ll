@@ -102,6 +102,11 @@ define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 !dbg !61 {
 ; Function Attrs: nounwind willreturn memory(read)
 declare i32 @atoi(ptr noundef) #4
 
+; Function Attrs: noinline nounwind optnone uwtable
+define dso_local void @new() #0 !dbg !89 {
+  ret void, !dbg !90
+}
+
 attributes #0 = { noinline nounwind optnone uwtable "frame-pointer"="all" "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cmov,+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
 attributes #1 = { "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cmov,+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
 attributes #2 = { noreturn nounwind "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cmov,+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
@@ -116,7 +121,7 @@ attributes #6 = { nounwind willreturn memory(read) }
 
 !0 = !DIGlobalVariableExpression(var: !1, expr: !DIExpression())
 !1 = distinct !DIGlobalVariable(scope: null, file: !2, line: 5, type: !3, isLocal: true, isDefinition: true)
-!2 = !DIFile(filename: "my_code.c", directory: "/home/samyak/CD", checksumkind: CSK_MD5, checksum: "ee413c6a70ebbc8b7ca6415709dc002f")
+!2 = !DIFile(filename: "my_code.c", directory: "/home/samyak/CD", checksumkind: CSK_MD5, checksum: "4ad183fdc144acfa52a540291ef307a3")
 !3 = !DICompositeType(tag: DW_TAG_array_type, baseType: !4, size: 136, elements: !5)
 !4 = !DIBasicType(name: "char", size: 8, encoding: DW_ATE_signed_char)
 !5 = !{!6}
@@ -203,3 +208,5 @@ attributes #6 = { nounwind willreturn memory(read) }
 !86 = !DILocation(line: 33, column: 28, scope: !61)
 !87 = !DILocation(line: 33, column: 5, scope: !61)
 !88 = !DILocation(line: 34, column: 5, scope: !61)
+!89 = distinct !DISubprogram(name: "new", scope: !2, file: !2, line: 37, type: !28, scopeLine: 37, spFlags: DISPFlagDefinition, unit: !17)
+!90 = !DILocation(line: 37, column: 12, scope: !89)
