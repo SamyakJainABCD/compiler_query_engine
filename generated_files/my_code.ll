@@ -50,16 +50,24 @@ define dso_local i32 @foo(i32 noundef %0, i32 noundef %1, i32 noundef %2, i32 no
   call void @llvm.dbg.declare(metadata ptr %11, metadata !43, metadata !DIExpression()), !dbg !44
   call void @llvm.dbg.declare(metadata ptr %12, metadata !45, metadata !DIExpression()), !dbg !46
   store i32 1, ptr %12, align 4, !dbg !47
-  %25 = load i32, ptr %11, align 4, !dbg !48
-  ret i32 %25, !dbg !49
+  %25 = load i32, ptr %12, align 4, !dbg !48
+  store i32 %25, ptr %5, align 4, !dbg !49
+  %26 = load i32, ptr %11, align 4, !dbg !50
+  ret i32 %26, !dbg !51
 }
 
 ; Function Attrs: nocallback nofree nosync nounwind speculatable willreturn memory(none)
 declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
 
 ; Function Attrs: noinline nounwind optnone uwtable
-define dso_local void @bar() #0 !dbg !50 {
-  ret void, !dbg !53
+define dso_local void @bar(i32 noundef %0, i32 noundef %1) #0 !dbg !52 {
+  %3 = alloca i32, align 4
+  %4 = alloca i32, align 4
+  store i32 %0, ptr %3, align 4
+  call void @llvm.dbg.declare(metadata ptr %3, metadata !55, metadata !DIExpression()), !dbg !56
+  store i32 %1, ptr %4, align 4
+  call void @llvm.dbg.declare(metadata ptr %4, metadata !57, metadata !DIExpression()), !dbg !58
+  ret void, !dbg !59
 }
 
 attributes #0 = { noinline nounwind optnone uwtable "frame-pointer"="all" "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cmov,+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
@@ -70,7 +78,7 @@ attributes #1 = { nocallback nofree nosync nounwind speculatable willreturn memo
 !llvm.ident = !{!9}
 
 !0 = distinct !DICompileUnit(language: DW_LANG_C11, file: !1, producer: "Ubuntu clang version 18.1.3 (1ubuntu1)", isOptimized: false, runtimeVersion: 0, emissionKind: FullDebug, splitDebugInlining: false, nameTableKind: None)
-!1 = !DIFile(filename: "my_code.c", directory: "/home/samyak/CD", checksumkind: CSK_MD5, checksum: "ed01238dadedd3de26234bfd288e4643")
+!1 = !DIFile(filename: "my_code.c", directory: "/home/samyak/CD", checksumkind: CSK_MD5, checksum: "4f3890b069e7de40d102c865a061ec55")
 !2 = !{i32 7, !"Dwarf Version", i32 5}
 !3 = !{i32 2, !"Debug Info Version", i32 3}
 !4 = !{i32 1, !"wchar_size", i32 4}
@@ -117,9 +125,15 @@ attributes #1 = { nocallback nofree nosync nounwind speculatable willreturn memo
 !45 = !DILocalVariable(name: "q", scope: !10, file: !1, line: 6, type: !13)
 !46 = !DILocation(line: 6, column: 12, scope: !10)
 !47 = !DILocation(line: 7, column: 6, scope: !10)
-!48 = !DILocation(line: 8, column: 12, scope: !10)
-!49 = !DILocation(line: 8, column: 5, scope: !10)
-!50 = distinct !DISubprogram(name: "bar", scope: !1, file: !1, line: 11, type: !51, scopeLine: 11, spFlags: DISPFlagDefinition, unit: !0)
-!51 = !DISubroutineType(types: !52)
-!52 = !{null}
-!53 = !DILocation(line: 12, column: 1, scope: !50)
+!48 = !DILocation(line: 8, column: 7, scope: !10)
+!49 = !DILocation(line: 8, column: 6, scope: !10)
+!50 = !DILocation(line: 9, column: 12, scope: !10)
+!51 = !DILocation(line: 9, column: 5, scope: !10)
+!52 = distinct !DISubprogram(name: "bar", scope: !1, file: !1, line: 12, type: !53, scopeLine: 12, flags: DIFlagPrototyped, spFlags: DISPFlagDefinition, unit: !0, retainedNodes: !14)
+!53 = !DISubroutineType(types: !54)
+!54 = !{null, !13, !13}
+!55 = !DILocalVariable(name: "x", arg: 1, scope: !52, file: !1, line: 12, type: !13)
+!56 = !DILocation(line: 12, column: 14, scope: !52)
+!57 = !DILocalVariable(name: "fuck", arg: 2, scope: !52, file: !1, line: 12, type: !13)
+!58 = !DILocation(line: 12, column: 21, scope: !52)
+!59 = !DILocation(line: 13, column: 1, scope: !52)

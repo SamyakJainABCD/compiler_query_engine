@@ -55,8 +55,10 @@
                     "instructions": [
                         "store i32 10, ptr %10, align 4, !dbg !42",
                         "store i32 1, ptr %12, align 4, !dbg !47",
-                        "%25 = load i32, ptr %11, align 4, !dbg !48",
-                        "ret i32 %25, !dbg !49"
+                        "%25 = load i32, ptr %12, align 4, !dbg !48",
+                        "store i32 %25, ptr %5, align 4, !dbg !49",
+                        "%26 = load i32, ptr %11, align 4, !dbg !50",
+                        "ret i32 %26, !dbg !51"
                     ]
                 }
             ]
@@ -71,7 +73,11 @@
                 {
                     "id": "",
                     "instructions": [
-                        "ret void, !dbg !13"
+                        "%3 = alloca i32, align 4",
+                        "%4 = alloca i32, align 4",
+                        "store i32 %0, ptr %3, align 4",
+                        "store i32 %1, ptr %4, align 4",
+                        "ret void, !dbg !19"
                     ]
                 }
             ]

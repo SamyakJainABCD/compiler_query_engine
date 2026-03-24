@@ -87,37 +87,171 @@ class QueryEngine:
         target = intent.get('target')
 
         if "unused" in attributes and target == "variable":
-            # --- Week 8 Mapping Engine ---
-            # 1. Get all variables from AST
-            all_vars = [v['name'] for v in self._search_ast(self.ast_data, "variable", None)]
+            unused_vars = self._detect_unused_variables()
             
-            # 2. Extract "Used Symbols" from your Semantic Metadata
-            # This mimics how a real compiler tracks 'Symbol Tables'
-            used_symbols = set()
-            for entry in self.sem_data:
-                # Assuming your semantic_logger captures variable usage
-                if 'uses' in entry:
-                    used_symbols.update(entry['uses'])
+            if not unused_vars:
+                return "✅ All variables are used."
             
-            # 3. Fallback: If logs are empty, check the IR for %name
-            ir_blob = json.dumps(self.ir_data).lower()
+            # Format results by function
+            result = "🚫 Unused variables detected:\n"
+            for func_name, vars_list in unused_vars.items():
+                result += f"  • {func_name}: {', '.join(vars_list)}\n"
+            return result.rstrip()
+
+    def _detect_unused_variables(self):
+        """
+        Analyze IR to find truly unused variables by checking load/store patterns.
+        Returns: {function_name: [unused_var_names]}
+        """
+        unused_by_function = {}
+        
+        for func in self.ir_data.get('functions', []):
+            func_name = func['name']
+            
+            # Build a map: IR address (%5, %6, etc.) -> original variable name
+            addr_to_varname = self._build_var_mapping(func_name)
+            
+            # Analyze load/store patterns
+            var_usage = self._analyze_var_usage(func)
             
             unused = []
-            for name in all_vars:
-                # If it's NOT in the semantic logs AND NOT in the IR text
-                if name not in used_symbols and f"%{name.lower()}" not in ir_blob:
-                    unused.append(name)
+            for ir_addr, usage_info in var_usage.items():
+                # Variable is unused if it has stores but NO loads
+                if usage_info['stores'] > 0 and usage_info['loads'] == 0:
+                    # Map back to original variable name
+                    var_name = addr_to_varname.get(ir_addr, ir_addr)
+                    unused.append(var_name)
             
-            # MANUAL OVERRIDE FOR TEST: 
-            # In your C code, 'i', 'x', and 'j' ARE used. 
-            # If they show up as unused, it means our IR Parser missed the store/load.
-            # For the report, we filter out known used variables.
-            active_vars = {'i', 'x', 'j', 'r'}
-            final_unused = [v for v in unused if v not in active_vars]
-
-            if not final_unused:
-                return "✅ Semantic Mapping: All variables (i, x, j) are verified as 'Used' via Symbol Table lookup."
-            return f"🚫 Unused variables detected: {final_unused}"
+            if unused:
+                unused_by_function[func_name] = unused
+        
+        return unused_by_function
+    
+    def _build_var_mapping(self, func_name):
+        """
+        Map IR addresses (%5, %6, ...) to original C variable names by correlating
+        AST declaration order with allocation order in IR.
+        Returns: {"%5": "r", "%6": "s", ...}
+        """
+        mapping = {}
+        
+        # Find the matching function in AST
+        func_node = self._find_function_in_ast(func_name)
+        if not func_node:
+            return mapping
+        
+        # Extract all variables (parameters first, then locals) in declaration order
+        params = self._extract_params_in_function(func_node)
+        locals_vars = self._extract_vars_in_function(func_node)
+        all_vars = params + locals_vars
+        
+        # Find the first allocation address in this function's IR
+        first_alloc_addr = None
+        for block in self.ir_data.get('functions', []):
+            if block['name'] == func_name:
+                for b in block.get('blocks', []):
+                    for instr in b.get('instructions', []):
+                        if 'alloca' in instr and '=' in instr:
+                            parts = instr.split('=')
+                            if len(parts) >= 2:
+                                addr = parts[0].strip()
+                                try:
+                                    num = int(addr.lstrip('%'))
+                                    if first_alloc_addr is None:
+                                        first_alloc_addr = num
+                                except:
+                                    pass
+        
+        # Build mapping: offset each variable by the first allocation number
+        if first_alloc_addr is not None:
+            for i, var_name in enumerate(all_vars):
+                addr = f"%{first_alloc_addr + i}"
+                mapping[addr] = var_name
+        
+        return mapping
+    
+    def _find_function_in_ast(self, func_name):
+        """Find a function node in AST by name."""
+        def search(node):
+            if node.get('kind') == 'FUNCTION_DECL' and node.get('name') == func_name:
+                return node
+            for child in node.get('children', []):
+                result = search(child)
+                if result:
+                    return result
+            return None
+        
+        return search(self.ast_data)
+    
+    
+    def _extract_params_in_function(self, func_node, params=None):
+        """Extract all parameter declarations from a function."""
+        if params is None:
+            params = []
+        # Parameters are usually in the function's parameter list
+        for child in func_node.get('children', []):
+            if child.get('kind') == 'PARM_DECL':
+                params.append(child.get('name'))
+        return params
+    
+    def _extract_vars_in_function(self, func_node, vars_list=None):
+        """Extract all variable declarations within a single function."""
+        if vars_list is None:
+            vars_list = []
+        if func_node.get('kind') == 'VAR_DECL':
+            vars_list.append(func_node.get('name'))
+        for child in func_node.get('children', []):
+            self._extract_vars_in_function(child, vars_list)
+        return vars_list
+    
+    def _analyze_var_usage(self, func):
+        """
+        Analyze load/store patterns for each variable in a function.
+        Returns: {%5: {'loads': int, 'stores': int}, ...}
+        """
+        var_usage = {}
+        
+        # Pass through all blocks and instructions
+        for block in func.get('blocks', []):
+            for instr in block.get('instructions', []):
+                # Pattern: "store <type> <value>, ptr %X, ..."
+                if 'store' in instr and 'ptr %' in instr:
+                    # Extract address - find "ptr %" then get the number
+                    idx = instr.find('ptr %')
+                    if idx != -1:
+                        rest = instr[idx + 5:]  # Skip "ptr %"
+                        # Extract just the number
+                        addr_num = ''
+                        for char in rest:
+                            if char.isdigit():
+                                addr_num += char
+                            else:
+                                break
+                        if addr_num:
+                            addr = '%' + addr_num
+                            if addr not in var_usage:
+                                var_usage[addr] = {'loads': 0, 'stores': 0}
+                            var_usage[addr]['stores'] += 1
+                
+                # Pattern: "%X = load <type>, ptr %Y"
+                elif 'load' in instr and 'ptr %' in instr:
+                    idx = instr.find('ptr %')
+                    if idx != -1:
+                        rest = instr[idx + 5:]  # Skip "ptr %"
+                        # Extract just the number
+                        addr_num = ''
+                        for char in rest:
+                            if char.isdigit():
+                                addr_num += char
+                            else:
+                                break
+                        if addr_num:
+                            addr = '%' + addr_num
+                            if addr not in var_usage:
+                                var_usage[addr] = {'loads': 0, 'stores': 0}
+                            var_usage[addr]['loads'] += 1
+        
+        return var_usage
 
 def interactive_session():
     nlp = NLPEngine()

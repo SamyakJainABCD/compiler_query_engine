@@ -19,7 +19,7 @@
             },
             {
                 "id": "",
-                "instruction_count": 4
+                "instruction_count": 6
             }
         ],
         "edges": [
@@ -49,7 +49,7 @@
         "nodes": [
             {
                 "id": "",
-                "instruction_count": 1
+                "instruction_count": 5
             }
         ],
         "edges": []
