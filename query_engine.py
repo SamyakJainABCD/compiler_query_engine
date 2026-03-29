@@ -1,5 +1,6 @@
 import json
 from modules.nlp_parser import NLPEngine
+from modules.buffer_overflow_analyzer import BufferOverflowAnalyzer
 
 class QueryEngine:
     def __init__(self, ast_file='generated_files/ast_export.json',
@@ -28,6 +29,10 @@ class QueryEngine:
         name = intent.get('name')
         attributes = intent.get('attributes', [])
         action = intent.get('action')
+
+        # Handle buffer overflow security queries
+        if query_type == 'security' and target == 'buffer_overflow':
+            return self._analyze_buffer_overflows(scope)
 
         # Handle reachability queries
         if query_type == 'reachability':
@@ -121,6 +126,78 @@ class QueryEngine:
                             queue.append((called_func, path + [called_func]))
         
         return f"❌ NO, '{target_block}' is NOT reachable from '{source_func}'"
+
+    def _analyze_buffer_overflows(self, scope=None):
+        """
+        Analyze the code for buffer overflow vulnerabilities
+        Args:
+            scope: Filter by risk level ('critical', 'high', 'all')
+        Returns:
+            Formatted report of buffer overflow risks
+        """
+        analyzer = BufferOverflowAnalyzer()
+        report = analyzer.analyze()
+        
+        # Filter by scope if specified
+        if scope and scope in ['critical', 'high', 'all']:
+            if scope == 'critical':
+                report['risks'] = [r for r in report['risks'] if r['risk_level'] == 'CRITICAL']
+            elif scope == 'high':
+                report['risks'] = [r for r in report['risks'] if r['risk_level'] in ['CRITICAL', 'HIGH']]
+        
+        # Format the report for display
+        return self._format_buffer_overflow_report(report)
+    
+    def _format_buffer_overflow_report(self, report):
+        """Format buffer overflow analysis report for user display"""
+        summary = report['summary']
+        risks = report['risks']
+        unsafe_calls = report['unsafe_calls']
+        recommendations = report['recommendations']
+        
+        # Build output
+        output = []
+        output.append("\n" + "="*70)
+        output.append("🔓 BUFFER OVERFLOW VULNERABILITY ANALYSIS")
+        output.append("="*70)
+        
+        # Summary section
+        output.append("\n📊 SUMMARY:")
+        output.append(f"   Total Risks Found: {summary['total_risks']}")
+        output.append(f"   🔴 Critical: {summary['critical_risks']}")
+        output.append(f"   🟠 High: {summary['high_risks']}")
+        output.append(f"   🟡 Medium: {summary['medium_risks']}")
+        output.append(f"   Unsafe Functions: {summary['unsafe_functions_found']}")
+        output.append(f"   Buffers Analyzed: {summary['buffers_analyzed']}")
+        
+        # Unsafe function calls
+        if unsafe_calls:
+            output.append("\n🚨 UNSAFE FUNCTION CALLS DETECTED:")
+            for call in unsafe_calls:
+                risk_icon = "🔴" if call['risk_level'] == 'CRITICAL' else "🟠"
+                output.append(f"\n   {risk_icon} {call['unsafe_call']} in '{call['function']}'")
+                output.append(f"      Description: {call['description']}")
+                output.append(f"      Instruction: {call['instruction']}")
+        
+        # Risks
+        if risks:
+            output.append("\n⚠️  IDENTIFIED RISKS:")
+            for i, risk in enumerate(risks, 1):
+                risk_icon = "🔴" if risk['risk_level'] == 'CRITICAL' else "🟠" if risk['risk_level'] == 'HIGH' else "🟡"
+                output.append(f"\n   [{i}] {risk_icon} {risk['type']}")
+                output.append(f"       Location: {risk['location']}")
+                output.append(f"       Detail: {risk['detail']}")
+                output.append(f"       Fix: {risk['recommendation']}")
+        
+        # Recommendations
+        if recommendations:
+            output.append("\n💡 RECOMMENDATIONS:")
+            for rec in recommendations:
+                output.append(f"   {rec}")
+        
+        output.append("\n" + "="*70 + "\n")
+        
+        return "\n".join(output)
 
     def _search_ast(self, node, target, scope, name=None, attributes=None, results=None, current_scope="Global"):
         if results is None: results = []
@@ -414,5 +491,6 @@ Find variable 'val' in 'process_value'
 Find variable 'x'
 Is the 'error_handler' block reachable from 'main'? (CFG)
 Show instructions for 'add'
+Are there any buffer overflow risks?
 '''
  

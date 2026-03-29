@@ -7,7 +7,7 @@ import modules.semantic_logger as semantic_logger
 import json
 import os
 
-c_path = 'my_code.c'
+c_path = 'vulnerable_code.c'
 output_dir = "generated_files"
 
 ast_output_path = os.path.join(output_dir, "ast_export.json")

@@ -72,8 +72,26 @@ class NLPEngine:
                 "scope": None,
                 "layer": None,
                 "attributes": [],
-                "query_type": "standard"  # Can be "standard", "reachability"
+                "query_type": "standard"  # Can be "standard", "reachability", "security"
             }
+
+            # Check for security/vulnerability analysis queries
+            security_keywords = ['buffer', 'overflow', 'vulnerability', 'vulnerability', 'security', 'risk']
+            if any(keyword in text_lower for keyword in security_keywords):
+                if 'buffer' in text_lower and ('overflow' in text_lower or 'risk' in text_lower):
+                    intent["query_type"] = "security"
+                    intent["target"] = "buffer_overflow"
+                    intent["layer"] = "SECURITY"
+                    
+                    # Check if user specified a risk level scope
+                    if 'critical' in text_lower:
+                        intent["scope"] = 'critical'
+                    elif 'high' in text_lower:
+                        intent["scope"] = 'high'
+                    else:
+                        intent["scope"] = 'all'
+                    
+                    return intent
 
             # Check for reachability questions (e.g., "is X reachable from Y")
             if "reachable" in text_lower:

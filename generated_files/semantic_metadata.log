@@ -1,6 +1,6 @@
 [
     {
-        "function": "error_handler",
+        "function": "copy_name",
         "metrics": {
             "block_count": 1,
             "edge_count": 0
@@ -11,29 +11,40 @@
         }
     },
     {
-        "function": "process_value",
+        "function": "format_string",
         "metrics": {
-            "block_count": 6,
-            "edge_count": 7
+            "block_count": 1,
+            "edge_count": 0
         },
         "analysis": {
-            "flow_type": "Complex (Branching)",
-            "loop_status": "Possible Loop Detected"
+            "flow_type": "Simple (Linear)",
+            "loop_status": "No Loops"
         }
     },
     {
-        "function": "main",
+        "function": "read_from_file",
         "metrics": {
-            "block_count": 3,
-            "edge_count": 3
+            "block_count": 1,
+            "edge_count": 0
         },
         "analysis": {
-            "flow_type": "Complex (Branching)",
-            "loop_status": "Possible Loop Detected"
+            "flow_type": "Simple (Linear)",
+            "loop_status": "No Loops"
         }
     },
     {
-        "function": "new",
+        "function": "process_data",
+        "metrics": {
+            "block_count": 1,
+            "edge_count": 0
+        },
+        "analysis": {
+            "flow_type": "Simple (Linear)",
+            "loop_status": "No Loops"
+        }
+    },
+    {
+        "function": "append_string",
         "metrics": {
             "block_count": 1,
             "edge_count": 0
