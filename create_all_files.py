@@ -6,8 +6,17 @@ import modules.create_ir as create_ir
 import modules.semantic_logger as semantic_logger
 import json
 import os
+import sys
 
-c_path = 'vulnerable_code.c'
+if len(sys.argv) < 2:
+    print("Usage: python create_all_files.py <c_file_path>")
+    sys.exit(1)
+
+c_path = sys.argv[1]
+
+if not os.path.exists(c_path):
+    print(f"Error: File '{c_path}' not found.")
+    sys.exit(1)
 output_dir = "generated_files"
 
 ast_output_path = os.path.join(output_dir, "ast_export.json")

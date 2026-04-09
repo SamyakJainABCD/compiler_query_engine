@@ -76,8 +76,42 @@ class NLPEngine:
             }
 
             # Check for security/vulnerability analysis queries
-            security_keywords = ['buffer', 'overflow', 'vulnerability', 'vulnerability', 'security', 'risk']
-            if any(keyword in text_lower for keyword in security_keywords):
+            security_keywords = ['buffer', 'overflow', 'vulnerability', 'security', 'risk', 'bounds', 'check', 'unsafe', 'dangerous']
+            
+            # Bounds check queries
+            if 'bounds' in text_lower and ('check' in text_lower or 'checking' in text_lower):
+                intent["query_type"] = "security"
+                intent["target"] = "bounds_check"
+                intent["layer"] = "SECURITY"
+                
+                # Extract loop name if specified
+                quoted_name = self._extract_quoted_string(text)
+                if quoted_name and 'loop' in text_lower:
+                    is_valid, error = self._validate_identifier(quoted_name)
+                    if is_valid:
+                        intent["scope"] = quoted_name
+                    else:
+                        intent["error"] = error
+                
+                return intent
+            
+            # Unsafe function calls queries
+            elif 'unsafe' in text_lower and ('function' in text_lower or 'call' in text_lower):
+                intent["query_type"] = "security"
+                intent["target"] = "unsafe_calls"
+                intent["layer"] = "SECURITY"
+                
+                if 'critical' in text_lower:
+                    intent["scope"] = 'critical'
+                elif 'high' in text_lower:
+                    intent["scope"] = 'high'
+                else:
+                    intent["scope"] = 'all'
+                
+                return intent
+            
+            # Comprehensive security/vulnerability queries
+            elif any(keyword in text_lower for keyword in security_keywords):
                 if 'buffer' in text_lower and ('overflow' in text_lower or 'risk' in text_lower):
                     intent["query_type"] = "security"
                     intent["target"] = "buffer_overflow"
@@ -92,7 +126,21 @@ class NLPEngine:
                         intent["scope"] = 'all'
                     
                     return intent
-
+                
+                # Generic security query
+                elif 'security' in text_lower or 'vulnerability' in text_lower:
+                    intent["query_type"] = "security"
+                    intent["target"] = "security_vulnerabilities"
+                    intent["layer"] = "SECURITY"
+                    
+                    if 'critical' in text_lower:
+                        intent["scope"] = 'critical'
+                    elif 'high' in text_lower:
+                        intent["scope"] = 'high'
+                    else:
+                        intent["scope"] = 'all'
+                    
+                    return intent
             # Check for reachability questions (e.g., "is X reachable from Y")
             if "reachable" in text_lower:
                 intent["query_type"] = "reachability"

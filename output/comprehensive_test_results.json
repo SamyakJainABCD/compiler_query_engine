@@ -1,0 +1,147 @@
+{
+  "accuracy": {
+    "categories": {
+      "function_queries": {
+        "passed": 3,
+        "total": 3,
+        "accuracy": 100.0
+      },
+      "variable_queries": {
+        "passed": 3,
+        "total": 3,
+        "accuracy": 100.0
+      },
+      "reachability_queries": {
+        "passed": 2,
+        "total": 2,
+        "accuracy": 100.0
+      },
+      "bounds_check_queries": {
+        "passed": 3,
+        "total": 3,
+        "accuracy": 100.0
+      },
+      "unsafe_function_queries": {
+        "passed": 2,
+        "total": 2,
+        "accuracy": 100.0
+      },
+      "buffer_overflow_queries": {
+        "passed": 2,
+        "total": 2,
+        "accuracy": 100.0
+      },
+      "security_queries": {
+        "passed": 2,
+        "total": 2,
+        "accuracy": 100.0
+      }
+    },
+    "overall_accuracy": 100.0,
+    "total_passed": 17,
+    "total_tests": 17
+  },
+  "edge_cases": {
+    "tests": [
+      {
+        "query": "find function \"_hidden_func\"",
+        "description": "valid identifier with underscore",
+        "result": "PASS"
+      },
+      {
+        "query": "find function \"func123\"",
+        "description": "identifier with numbers",
+        "result": "PASS"
+      },
+      {
+        "query": "find variable \"_x\" in \"_main\"",
+        "description": "both with underscores",
+        "result": "PASS"
+      },
+      {
+        "query": "list functions",
+        "description": "generic listing",
+        "result": "PASS"
+      },
+      {
+        "query": "show unused variable",
+        "description": "singular form",
+        "result": "PASS"
+      },
+      {
+        "query": "is \"a\" reachable from \"b\"?",
+        "description": "single character identifiers",
+        "result": "PASS"
+      }
+    ],
+    "passed": 6,
+    "total": 6,
+    "accuracy": 100.0
+  },
+  "error_handling": {
+    "tests": [
+      {
+        "query": "find function without_quotes",
+        "description": "missing quotes",
+        "expected_error": true,
+        "result": "INCORRECT"
+      },
+      {
+        "query": "",
+        "description": "empty query",
+        "expected_error": true,
+        "result": "INCORRECT"
+      },
+      {
+        "query": "is \"test\" reachable from",
+        "description": "incomplete query",
+        "expected_error": true,
+        "result": "CORRECT"
+      },
+      {
+        "query": "find [invalid] \"func\"",
+        "description": "invalid characters",
+        "expected_error": true,
+        "result": "INCORRECT"
+      },
+      {
+        "query": "find function \"\" ",
+        "description": "empty identifier",
+        "expected_error": true,
+        "result": "INCORRECT"
+      }
+    ],
+    "caught_correctly": 1,
+    "total": 5,
+    "handling_accuracy": 20.0
+  },
+  "latency": {
+    "parsing": {
+      "mean": 2.070803165435791,
+      "median": 1.999974250793457,
+      "min": 1.7807483673095703,
+      "max": 21.516799926757812,
+      "p95": 2.4526119232177734,
+      "p99": 2.8619766235351562,
+      "stdev": 0.6471205667628959
+    },
+    "execution": {
+      "mean": 8.59542989730835,
+      "median": 8.014202117919922,
+      "min": 7.45391845703125,
+      "max": 30.364274978637695,
+      "p95": 9.470462799072266,
+      "p99": 28.980493545532227,
+      "stdev": 3.078187001071688
+    }
+  },
+  "summary": {
+    "overall_accuracy": 100.0,
+    "edge_case_handling": 100.0,
+    "error_handling": 20.0,
+    "system_health": 73.33333333333333,
+    "status": "NEEDS_IMPROVEMENT",
+    "parsing_latency_ms": 2.070803165435791,
+    "execution_latency_ms": 8.59542989730835
+  }
+}

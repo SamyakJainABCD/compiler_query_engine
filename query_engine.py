@@ -1,6 +1,8 @@
 import json
 from modules.nlp_parser import NLPEngine
 from modules.buffer_overflow_analyzer import BufferOverflowAnalyzer
+from modules.security_query_module import SecurityQueryModule
+from modules.ast_visualizer import print_ast_visual
 
 class QueryEngine:
     def __init__(self, ast_file='generated_files/ast_export.json',
@@ -30,6 +32,11 @@ class QueryEngine:
         attributes = intent.get('attributes', [])
         action = intent.get('action')
 
+        # Handle security queries through the SecurityQueryModule
+        if query_type == 'security':
+            security_module = SecurityQueryModule()
+            return security_module.process_query(intent)
+
         # Handle buffer overflow security queries
         if query_type == 'security' and target == 'buffer_overflow':
             return self._analyze_buffer_overflows(scope)
@@ -57,9 +64,18 @@ class QueryEngine:
             else:
                 results = self._search_ast(self.ast_data, target, scope, name, attributes)
             
-            # If the user asked to "count", return the length instead of the list
-            # if action == "count":
-            #     return f"I found {len(results)} {target}(s) matching your criteria."
+            # Visualize results with AST highlighting
+            if results:
+                query_text = f"{intent.get('action', 'find')} {target}"
+                if name:
+                    query_text += f" \"{name}\""
+                
+                visual_result = {
+                    "query": query_text,
+                    "results": results if isinstance(results, list) else [results],
+                    "ast": self.ast_data
+                }
+                print_ast_visual(visual_result)
             
             return results if results else f"No {target}s found."
 
@@ -438,7 +454,9 @@ def interactive_session():
         # Step 2: Execute Query
         if intent.get("target"):
             result = qe.execute(intent)
-            print(f"🤖 Result: {result}")
+            printable_result = json.dumps(result, indent=3, ensure_ascii=False)
+            printable_result = printable_result.replace('\\n', '\n')
+            print(f"🤖 Result: {printable_result}")
         else:
             print("🤖 Sorry, I couldn't identify if you want to see a function, variable, or IR.")
 
@@ -448,49 +466,14 @@ if __name__ == "__main__":
     qe = QueryEngine(ast_file='generated_files/ast_export.json', ir_file='generated_files/ir_export.json', cfg_file='generated_files/cfg_export.json')
     interactive_session()
 
-def test():
-    test_cases = [
-        {
-            "description": "Scenario 1: Global AST Search (Find all functions)",
-            "intent": {'action': 'find', 'target': 'function', 'layer': 'AST', 'scope': None}
-        },
-        {
-            "description": "Scenario 2: Scoped AST Search (Find specific variable)",
-            "intent": {'action': 'find', 'target': 'variable', 'layer': 'AST', 'scope': 'result'}
-        },
-        {
-            "description": "Scenario 3: IR Logic Check (Show instructions for 'add')",
-            "intent": {'action': 'show', 'target': 'instruction', 'layer': 'IR', 'scope': 'add'}
-        },
-        {
-            "description": "Scenario 4: CFG Connectivity (Show graph structure for 'main')",
-            "intent": {'action': 'graph', 'target': 'cfg', 'layer': 'CFG', 'scope': 'main'}
-        },
-        {
-            "description": "Scenario 5: Error Handling (Search non-existent function)",
-            "intent": {'action': 'find', 'target': 'function', 'layer': 'AST', 'scope': 'non_existent_func'}
-        }
-    ]
-
-    for case in test_cases:
-        print(f"\n{'='*60}")
-        print(f"RUNNING TEST: {case['description']}")
-        print(f"{'='*60}")
-        result = qe.execute(case['intent'])
-        
-        # Pretty print the results
-        if isinstance(result, (list, dict)):
-            print(json.dumps(result, indent=2))
-        else:
-            print(result)
-
 '''
-Find all unused variables
 find function 'process_value'
 Find variable 'val' in 'process_value'
 Find variable 'x'
+Find all unused variables
 Is the 'error_handler' block reachable from 'main'? (CFG)
 Show instructions for 'add'
-Are there any buffer overflow risks?
+List Buffer Overflows
+List all unsafe function calls
+Show critical unsafe calls
 '''
- 

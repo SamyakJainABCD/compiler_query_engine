@@ -1,20 +1,66 @@
 {
     "functions": [
         {
-            "name": "copy_name",
+            "name": "error_handler",
             "blocks": [
                 {
                     "id": "",
                     "instructions": [
-                        "%2 = alloca ptr, align 8",
-                        "%3 = alloca [10 x i8], align 1",
-                        "store ptr %0, ptr %2, align 8",
-                        "%4 = getelementptr inbounds [10 x i8], ptr %3, i64 0, i64 0, !dbg !48",
-                        "%5 = load ptr, ptr %2, align 8, !dbg !49",
-                        "%6 = call ptr @strcpy(ptr noundef %4, ptr noundef %5) #4, !dbg !50",
-                        "%7 = getelementptr inbounds [10 x i8], ptr %3, i64 0, i64 0, !dbg !51",
-                        "%8 = call i32 (ptr, ...) @printf(ptr noundef @.str, ptr noundef %7), !dbg !52",
-                        "ret void, !dbg !53"
+                        "%1 = call i32 (ptr, ...) @printf(ptr noundef @.str), !dbg !30",
+                        "call void @exit(i32 noundef 1) #5, !dbg !31",
+                        "unreachable, !dbg !31"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "printf",
+            "blocks": []
+        },
+        {
+            "name": "exit",
+            "blocks": []
+        },
+        {
+            "name": "process_value",
+            "blocks": [
+                {
+                    "id": "",
+                    "instructions": [
+                        "%3 = alloca i32, align 4",
+                        "%4 = alloca i32, align 4",
+                        "%5 = alloca i32, align 4",
+                        "%6 = alloca i32, align 4",
+                        "store i32 %0, ptr %4, align 4",
+                        "store i32 %1, ptr %5, align 4",
+                        "store i32 0, ptr %6, align 4, !dbg !37",
+                        "%7 = load i32, ptr %4, align 4, !dbg !38",
+                        "%8 = icmp slt i32 %7, 0, !dbg !40",
+                        "br i1 %8, label %9, label %11, !dbg !41"
+                    ]
+                },
+                {
+                    "id": "",
+                    "instructions": [
+                        "%10 = call i32 (ptr, ...) @printf(ptr noundef @.str.1), !dbg !42",
+                        "store i32 -1, ptr %3, align 4, !dbg !44",
+                        "br label %14, !dbg !44"
+                    ]
+                },
+                {
+                    "id": "",
+                    "instructions": [
+                        "%12 = load i32, ptr %4, align 4, !dbg !45",
+                        "%13 = mul nsw i32 %12, 2, !dbg !46",
+                        "store i32 %13, ptr %3, align 4, !dbg !47",
+                        "br label %14, !dbg !47"
+                    ]
+                },
+                {
+                    "id": "",
+                    "instructions": [
+                        "%15 = load i32, ptr %3, align 4, !dbg !48",
+                        "ret i32 %15, !dbg !48"
                     ]
                 }
             ]
@@ -24,103 +70,65 @@
             "blocks": []
         },
         {
-            "name": "strcpy",
-            "blocks": []
-        },
-        {
-            "name": "printf",
-            "blocks": []
-        },
-        {
-            "name": "format_string",
+            "name": "main",
             "blocks": [
                 {
                     "id": "",
                     "instructions": [
-                        "%2 = alloca ptr, align 8",
-                        "%3 = alloca [20 x i8], align 16",
-                        "store ptr %0, ptr %2, align 8",
-                        "%4 = getelementptr inbounds [20 x i8], ptr %3, i64 0, i64 0, !dbg !51",
-                        "%5 = load ptr, ptr %2, align 8, !dbg !52",
-                        "%6 = call i32 (ptr, ptr, ...) @sprintf(ptr noundef %4, ptr noundef @.str.1, ptr noundef %5) #4, !dbg !53",
-                        "%7 = getelementptr inbounds [20 x i8], ptr %3, i64 0, i64 0, !dbg !54",
-                        "%8 = call i32 (ptr, ...) @printf(ptr noundef @.str, ptr noundef %7), !dbg !55",
-                        "ret void, !dbg !56"
+                        "%3 = alloca i32, align 4",
+                        "%4 = alloca i32, align 4",
+                        "%5 = alloca ptr, align 8",
+                        "%6 = alloca i32, align 4",
+                        "%7 = alloca i32, align 4",
+                        "store i32 0, ptr %3, align 4",
+                        "store i32 %0, ptr %4, align 4",
+                        "store ptr %1, ptr %5, align 8",
+                        "store i32 50, ptr %7, align 4, !dbg !41",
+                        "%8 = load i32, ptr %4, align 4, !dbg !42",
+                        "%9 = icmp sgt i32 %8, 1, !dbg !44",
+                        "br i1 %9, label %10, label %15, !dbg !45"
+                    ]
+                },
+                {
+                    "id": "",
+                    "instructions": [
+                        "%11 = load ptr, ptr %5, align 8, !dbg !46",
+                        "%12 = getelementptr inbounds ptr, ptr %11, i64 1, !dbg !46",
+                        "%13 = load ptr, ptr %12, align 8, !dbg !46",
+                        "%14 = call i32 @atoi(ptr noundef %13) #5, !dbg !48",
+                        "store i32 %14, ptr %7, align 4, !dbg !49",
+                        "br label %15, !dbg !50"
+                    ]
+                },
+                {
+                    "id": "",
+                    "instructions": [
+                        "%16 = load i32, ptr %7, align 4, !dbg !51",
+                        "%17 = call i32 @process_value(i32 noundef %16, i32 noundef 0), !dbg !52",
+                        "store i32 %17, ptr %6, align 4, !dbg !53",
+                        "%18 = load i32, ptr %6, align 4, !dbg !54",
+                        "%19 = call i32 (ptr, ...) @printf(ptr noundef @.str.2, i32 noundef %18), !dbg !55",
+                        "ret i32 0, !dbg !56"
                     ]
                 }
             ]
         },
         {
-            "name": "sprintf",
+            "name": "atoi",
             "blocks": []
         },
         {
-            "name": "read_from_file",
+            "name": "unused",
             "blocks": [
                 {
                     "id": "",
                     "instructions": [
-                        "%2 = alloca ptr, align 8",
-                        "%3 = alloca [16 x i8], align 16",
-                        "store ptr %0, ptr %2, align 8",
-                        "%4 = load ptr, ptr %2, align 8, !dbg !112",
-                        "%5 = getelementptr inbounds [16 x i8], ptr %3, i64 0, i64 0, !dbg !113",
-                        "%6 = call i32 (ptr, ptr, ...) @__isoc99_fscanf(ptr noundef %4, ptr noundef @.str.2, ptr noundef %5), !dbg !114",
-                        "%7 = getelementptr inbounds [16 x i8], ptr %3, i64 0, i64 0, !dbg !115",
-                        "%8 = call i32 (ptr, ...) @printf(ptr noundef @.str.3, ptr noundef %7), !dbg !116",
-                        "ret void, !dbg !117"
+                        "%1 = alloca i32, align 4",
+                        "%2 = load i32, ptr %1, align 4, !dbg !31",
+                        "ret i32 %2, !dbg !31"
                     ]
                 }
             ]
-        },
-        {
-            "name": "__isoc99_fscanf",
-            "blocks": []
-        },
-        {
-            "name": "process_data",
-            "blocks": [
-                {
-                    "id": "",
-                    "instructions": [
-                        "%1 = alloca [15 x i8], align 1",
-                        "%2 = getelementptr inbounds [15 x i8], ptr %1, i64 0, i64 0, !dbg !48",
-                        "%3 = call i32 (ptr, ...) @__isoc99_scanf(ptr noundef @.str.2, ptr noundef %2), !dbg !49",
-                        "%4 = getelementptr inbounds [15 x i8], ptr %1, i64 0, i64 0, !dbg !50",
-                        "%5 = call i32 (ptr, ...) @printf(ptr noundef @.str.4, ptr noundef %4), !dbg !51",
-                        "ret void, !dbg !52"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "__isoc99_scanf",
-            "blocks": []
-        },
-        {
-            "name": "append_string",
-            "blocks": [
-                {
-                    "id": "",
-                    "instructions": [
-                        "%2 = alloca ptr, align 8",
-                        "%3 = alloca [32 x i8], align 16",
-                        "store ptr %0, ptr %2, align 8",
-                        "%4 = getelementptr inbounds [32 x i8], ptr %3, i64 0, i64 0, !dbg !51",
-                        "%5 = call ptr @strcpy(ptr noundef %4, ptr noundef @.str.5) #4, !dbg !52",
-                        "%6 = getelementptr inbounds [32 x i8], ptr %3, i64 0, i64 0, !dbg !53",
-                        "%7 = load ptr, ptr %2, align 8, !dbg !54",
-                        "%8 = call ptr @strcat(ptr noundef %6, ptr noundef %7) #4, !dbg !55",
-                        "%9 = getelementptr inbounds [32 x i8], ptr %3, i64 0, i64 0, !dbg !56",
-                        "%10 = call i32 (ptr, ...) @printf(ptr noundef @.str, ptr noundef %9), !dbg !57",
-                        "ret void, !dbg !58"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "strcat",
-            "blocks": []
         }
     ]
 }

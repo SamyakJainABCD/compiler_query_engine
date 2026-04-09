@@ -1,38 +1,37 @@
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 
-// Example 1: strcpy vulnerability
-void copy_name(char *dest) {
-    char buffer[10];
-    strcpy(buffer, dest);  // DANGER: unbounded string copy
-    printf("%s\n", buffer);
+void error_handler() {
+    printf("Error occurred!\n");
+    exit(1);
 }
 
-// Example 2: sprintf vulnerability  
-void format_string(char *input) {
-    char result[20];
-    sprintf(result, "User: %s", input);  // DANGER: unchecked format
-    printf("%s\n", result);
+int process_value(int val, int x) {
+    int v = 0;
+    if (val < 0) {
+        printf("Negative value detected\n");
+        return -1;
+    }
+    // if (val > 100) {
+    if(0){       //uncomment to test "Is the error_handler block reachable from main?"
+        error_handler();
+    }
+    return val * 2;
 }
 
-// Example 3: fscanf vulnerability
-void read_from_file(FILE *fp) {
-    char buffer[16];
-    fscanf(fp, "%s", buffer);  // DANGER: no width specification
-    printf("Data: %s\n", buffer);
+int main(int argc, char *argv[]) {
+    int result;
+    int input = 50;
+
+    if (argc > 1) {
+        input = atoi(argv[1]);
+    }
+
+    result = process_value(input, 0);
+
+
+    printf("Result: %d\n", result);
+    return 0;
 }
 
-// Example 4: scanf vulnerability
-void process_data() {
-    char name[15];
-    scanf("%s", name);  // DANGER: no width specification
-    printf("Name: %s\n", name);
-}
-
-// Example 5: strcat vulnerability
-void append_string(char *user_data) {
-    char buffer[32];
-    strcpy(buffer, "Hello ");
-    strcat(buffer, user_data);  // DANGER: no length checking
-    printf("%s\n", buffer);
-}
+int unused(){}

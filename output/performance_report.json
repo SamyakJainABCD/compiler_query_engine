@@ -1,0 +1,98 @@
+{
+  "timestamp": "2026-04-07 12:44:54",
+  "accuracy": {
+    "total_tests": 17,
+    "passed": 17,
+    "failed": 0,
+    "accuracy": 100.0,
+    "details": []
+  },
+  "latency": {
+    "parsing_latencies": {
+      "find function \"main\"": {
+        "min": -592.5228595733643,
+        "avg": -3.7918615341186523,
+        "max": 3.3788681030273438,
+        "p95": 2.8934478759765625,
+        "p99": 3.3788681030273438
+      },
+      "list all bounds checks": {
+        "min": 1.7650127410888672,
+        "avg": 1.932995319366455,
+        "max": 2.7756690979003906,
+        "p95": 2.4633407592773438,
+        "p99": 2.7756690979003906
+      },
+      "show critical unsafe function calls": {
+        "min": 1.9152164459228516,
+        "avg": 2.226691246032715,
+        "max": 4.181623458862305,
+        "p95": 2.8672218322753906,
+        "p99": 4.181623458862305
+      },
+      "is \"error\" reachable from \"main\"?": {
+        "min": 2.148866653442383,
+        "avg": 2.451615333557129,
+        "max": 4.1332244873046875,
+        "p95": 3.115415573120117,
+        "p99": 4.1332244873046875
+      }
+    },
+    "averages": {},
+    "percentiles": {}
+  },
+  "execution": {
+    "execution_latencies": {
+      "find function \"main\"": {
+        "parse_avg": 3.0071139335632324,
+        "exec_avg": 1.1334514617919922,
+        "total_avg": 4.140565395355225,
+        "total_p95": 4.678964614868164,
+        "total_p99": 39.60895538330078
+      },
+      "list all bounds checks": {
+        "parse_avg": 2.259402275085449,
+        "exec_avg": 6.36587381362915,
+        "total_avg": 8.6252760887146,
+        "total_p95": 9.625673294067383,
+        "total_p99": 32.5930118560791
+      },
+      "show critical unsafe function calls": {
+        "parse_avg": 2.474231719970703,
+        "exec_avg": 6.808152198791504,
+        "total_avg": 9.282383918762207,
+        "total_p95": 11.151552200317383,
+        "total_p99": 33.21027755737305
+      }
+    },
+    "breakdown": {}
+  },
+  "scalability": {
+    "parsing_scales": {
+      "simple": {
+        "query": "find function \"main\"",
+        "avg_time_ms": 2.315196990966797,
+        "std_dev": 0.3509411104303992
+      },
+      "medium": {
+        "query": "list all bounds checks",
+        "avg_time_ms": 2.125563621520996,
+        "std_dev": 0.3107716437623698
+      },
+      "complex": {
+        "query": "show security vulnerabilities",
+        "avg_time_ms": 2.1097946166992188,
+        "std_dev": 0.5088189841695099
+      }
+    },
+    "execution_scales": {}
+  },
+  "summary": {
+    "overall_accuracy": 100.0,
+    "total_tests": 17,
+    "passed_tests": 17,
+    "failed_tests": 0,
+    "status": "PASS",
+    "recommendations": []
+  }
+}

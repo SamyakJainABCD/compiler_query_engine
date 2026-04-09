@@ -1,0 +1,58 @@
+{'query_type': 'buffer_overflow_detailed', 'summary': {'total_risks': 9, 'critical_risks': 2, 'high_risks': 2, 'medium_risks': 5, 'unsafe_functions_found': 4, 'buffers_analyzed': 5
+    }, 'risks': [
+        {'type': 'UNSAFE_FUNCTION_CALL', 'location': 'copy_name', 'risk_level': 'CRITICAL', 'detail': "Function 'copy_name' calls unsafe function 'strcpy'", 'recommendation': "Replace 'strcpy' with safer alternative"
+        },
+        {'type': 'UNSAFE_FUNCTION_CALL', 'location': 'format_string', 'risk_level': 'HIGH', 'detail': "Function 'format_string' calls unsafe function 'sprintf'", 'recommendation': "Replace 'sprintf' with safer alternative"
+        },
+        {'type': 'UNSAFE_FUNCTION_CALL', 'location': 'append_string', 'risk_level': 'CRITICAL', 'detail': "Function 'append_string' calls unsafe function 'strcpy'", 'recommendation': "Replace 'strcpy' with safer alternative"
+        },
+        {'type': 'UNSAFE_FUNCTION_CALL', 'location': 'append_string', 'risk_level': 'HIGH', 'detail': "Function 'append_string' calls unsafe function 'strcat'", 'recommendation': "Replace 'strcat' with safer alternative"
+        },
+        {'type': 'SMALL_FIXED_BUFFER', 'location': 'copy_name', 'risk_level': 'MEDIUM', 'detail': "Small fixed-size buffer 'buffer' (10 bytes) declared in function 'copy_name'", 'recommendation': 'Ensure all writes to this buffer are bounds-checked'
+        },
+        {'type': 'SMALL_FIXED_BUFFER', 'location': 'format_string', 'risk_level': 'MEDIUM', 'detail': "Small fixed-size buffer 'result' (20 bytes) declared in function 'format_string'", 'recommendation': 'Ensure all writes to this buffer are bounds-checked'
+        },
+        {'type': 'SMALL_FIXED_BUFFER', 'location': 'read_from_file', 'risk_level': 'MEDIUM', 'detail': "Small fixed-size buffer 'buffer' (16 bytes) declared in function 'read_from_file'", 'recommendation': 'Ensure all writes to this buffer are bounds-checked'
+        },
+        {'type': 'SMALL_FIXED_BUFFER', 'location': 'process_data', 'risk_level': 'MEDIUM', 'detail': "Small fixed-size buffer 'name' (15 bytes) declared in function 'process_data'", 'recommendation': 'Ensure all writes to this buffer are bounds-checked'
+        },
+        {'type': 'SMALL_FIXED_BUFFER', 'location': 'append_string', 'risk_level': 'MEDIUM', 'detail': "Small fixed-size buffer 'buffer' (32 bytes) declared in function 'append_string'", 'recommendation': 'Ensure all writes to this buffer are bounds-checked'
+        }
+    ], 'unsafe_calls': [
+        {'function': 'copy_name', 'unsafe_call': 'strcpy', 'instruction': '%6 = call ptr @strcpy(ptr noundef %4, ptr noundef %5) #4, !dbg !50', 'risk_level': 'CRITICAL', 'description': 'Copies string without size checking'
+        },
+        {'function': 'format_string', 'unsafe_call': 'sprintf', 'instruction': '%6 = call i32 (ptr, ptr, ...) @sprintf(ptr noundef %4, ptr noundef @.str.1, ptr noundef %5) #4, !dbg !53', 'risk_level': 'HIGH', 'description': 'Formatted output without size checking'
+        },
+        {'function': 'append_string', 'unsafe_call': 'strcpy', 'instruction': '%5 = call ptr @strcpy(ptr noundef %4, ptr noundef @.str.5) #4, !dbg !52', 'risk_level': 'CRITICAL', 'description': 'Copies string without size checking'
+        },
+        {'function': 'append_string', 'unsafe_call': 'strcat', 'instruction': '%8 = call ptr @strcat(ptr noundef %6, ptr noundef %7) #4, !dbg !55', 'risk_level': 'HIGH', 'description': 'Concatenates without size checking'
+        }
+    ], 'buffers': [
+        {'name': 'buffer', 'function': 'copy_name', 'type': 'char[
+                10
+            ]', 'size': '10', 'location': {'line': 6, 'column': 10
+            }
+        },
+        {'name': 'result', 'function': 'format_string', 'type': 'char[
+                20
+            ]', 'size': '20', 'location': {'line': 13, 'column': 10
+            }
+        },
+        {'name': 'buffer', 'function': 'read_from_file', 'type': 'char[
+                16
+            ]', 'size': '16', 'location': {'line': 20, 'column': 10
+            }
+        },
+        {'name': 'name', 'function': 'process_data', 'type': 'char[
+                15
+            ]', 'size': '15', 'location': {'line': 27, 'column': 10
+            }
+        },
+        {'name': 'buffer', 'function': 'append_string', 'type': 'char[
+                32
+            ]', 'size': '32', 'location': {'line': 34, 'column': 10
+            }
+        }
+    ], 'recommendations': ['🔴 CRITICAL: Replace all unsafe string functions with bounds-checked alternatives', '  → Replace strcpy() with strncpy() or strlcpy()', '  → Replace strcat() with strncat() or strlcat()', '  → Replace sprintf() with snprintf()', '⚠️  HIGH: Implement input validation and bounds checking', '  → Validate lengths of user input before copying', '  → Use dynamic memory allocation when size is unknown', '💡 SUGGESTION: Review all buffer declarations', '  → Consider using dynamic allocation (malloc) for variable-sized data', '  → Add assertions and checks for buffer operations', '🛡️  BEST PRACTICES:', '  → Use modern safe string libraries', '  → Enable compiler warnings (-Wall -Wextra)', '  → Use static analysis tools (valgrind, ASAN, Clang Static Analyzer)'
+    ]
+}

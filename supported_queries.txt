@@ -1,0 +1,93 @@
+SUPPORTED QUERIES - Natural Language Compiler Query Engine
+================================================================
+
+AST LAYER QUERIES
+-----------------
+
+1. Find Function
+   Retrieves detailed information about a specific function including its signature, parameters, and body.
+   Example: "find function \"main\""
+
+
+3. Find Variable
+   Locates specific variables and displays their declarations, scope, and type information.
+   Example: "find variable \"buffer\""
+
+4. Find Variable in function
+   Located a specific vairable in a specific function and gives its name.
+   Example: "find \"x\" in \"main\""
+
+5. Find Unused Variables
+   Discovers unused variables in the source code that consume memory without being referenced.
+   Example: "find unused variables"
+
+6. Find Unused Functions
+   Identifies functions that are defined but never called or referenced elsewhere.
+   Example: "find unused function"
+
+
+IR LAYER QUERIES
+----------------
+
+7. Show Instructions
+   Displays LLVM IR instructions for a specified function with full details.
+   Example: "show instructions in \"main\""
+
+8. List Instructions
+   Returns all IR instructions organized by function and basic block.
+   Example: "list instructions"
+
+9. Show Logic
+   Shows the intermediate representation and control flow logic for analysis.
+   Example: "show logic in \"process_data\""
+
+
+CFG LAYER QUERIES
+-----------------
+
+10. Show Control Flow Graph
+    Displays the complete control flow graph for a function showing branches and blocks.
+    Example: "show cfg for \"main\""
+
+11. Find Loop
+    Locates loop structures and displays their entry points, body, and exit conditions.
+    Example: "find loop \"buffer_loop\""
+
+12. List Loops
+    Returns all loops in the code with their nesting levels and iteration counts.
+    Example: "list loops"
+
+13. Show Block
+    Displays details of a specific control flow block and its predecessors/successors.
+    Example: "show block \"BB1\""
+
+
+REACHABILITY QUERIES
+--------------------
+
+14. Reachability Analysis
+    Checks if a target function or block is reachable from a source function using call graph analysis.
+    Example: "is \"error_handler\" reachable from \"main\"?"
+
+
+SECURITY QUERIES
+----------------
+
+17. List Buffer Overflows
+    Detects potential buffer overflow vulnerabilities with risk level assessment.
+    Example: "list buffer overflows"
+
+19. List Unsafe Function Calls
+    Finds all calls to unsafe/dangerous functions like strcpy, sprintf, etc.
+    Example: "list unsafe function calls"
+    Or filtered: "list unsafe function calls critical"
+
+
+QUERY SYNTAX NOTES
+------------------
+
+- Use quoted identifiers for function/variable names(identifiers): "name"
+- Support for both single and double quotes: 'name' or "name"
+- Security queries can include risk level filters: critical, high, medium
+- Scope can be specified with keywords: in, from
+- Actions: find, show, list, check, count, analyze
